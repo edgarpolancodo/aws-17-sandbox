@@ -22,19 +22,25 @@ var base ='/api/v1'
 //console.log(cool());
 app.get(base+'/contacts', (req, res) => {
     res.send(contacts);
-    console.log('New request');
+    console.log('GET contacts');
 });
 
 app.post(base+'/contacts', (req, res) => {
     var contact = req.body;
     contacts.push(contact);
     res.sendStatus(201);
-    console.log('New request');
+    console.log('POST contact');
 });
 
 app.get('/', (req, res) => {
     res.send('<html><body><h1>Hola cliente' + cool() + '</h1></body></html>');
     console.log('New request');
+});
+
+app.delete(base+'/contacts', (req, res) => {
+    res.sendStatus(200);
+    contacts = [];
+    console.log('DELETE contacts');
 });
 
 app.listen(port, () => {
