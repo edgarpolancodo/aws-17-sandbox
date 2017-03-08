@@ -54,6 +54,14 @@ app.delete(base+'/contacts', (req, res) => {
     console.log('DELETE contacts');
 });
 
+app.delete(base+'/contacts/:name', (req, res) => {
+    res.sendStatus(200);
+    contacts = contacts.filter((contac) => {
+        return (contac.name != req.params.name)
+    });
+    console.log('DELETE contacts');
+});
+
 app.put(base+'/contacts/:name', (req, res) => {
     var contact = req.body;
     
