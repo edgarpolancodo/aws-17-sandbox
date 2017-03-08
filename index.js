@@ -31,8 +31,10 @@ app.get(base+'/contacts/:name', (req, res) => {
         
         return (contact.name == req.params.name)
     })[0];
-    
-    res.send(fcontacts);
+    if(fcontacts)
+        res.send(fcontacts);
+    else
+        res.sendStatus(404);
     console.log('GET contact');
 });
 
