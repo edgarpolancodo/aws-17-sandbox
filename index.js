@@ -59,7 +59,7 @@ app.delete(base+'/contacts/:name', (req, res) => {
     contacts = contacts.filter((contac) => {
         return (contac.name != req.params.name)
     });
-    console.log('DELETE contacts');
+    console.log('DELETE contact');
 });
 
 app.put(base+'/contacts/:name', (req, res) => {
