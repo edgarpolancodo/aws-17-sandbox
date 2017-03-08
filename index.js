@@ -69,9 +69,13 @@ app.delete(base+'/contacts', (req, res) => {
 });
 
 app.delete(base+'/contacts/:name', (req, res) => {
-    res.sendStatus(200);
+    /*res.sendStatus(200);
     contacts = contacts.filter((contac) => {
         return (contac.name != req.params.name)
+    });*/
+    db.remove({name : req.params.name},{},(err, numRemoved)=>{
+        console.log('Filas removidas: '+numRemoved)
+        res.sendStatus(200);
     });
     console.log('DELETE contact');
 });
