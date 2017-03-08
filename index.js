@@ -60,8 +60,11 @@ app.get('/', (req, res) => {
 });
 
 app.delete(base+'/contacts', (req, res) => {
-    res.sendStatus(200);
-    contacts = [];
+    //contacts = [];
+    db.remove({},{},(err, numRemoved)=>{
+        console.log('Filas removidas: '+numRemoved)
+        res.sendStatus(200);
+    });
     console.log('DELETE contacts');
 });
 
