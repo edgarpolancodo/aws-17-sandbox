@@ -43,6 +43,15 @@ app.delete(base+'/contacts', (req, res) => {
     console.log('DELETE contacts');
 });
 
+app.put(base+'/contacts', (req, res) => {
+    var contact = req.body;
+    res.sendStatus(200);
+    contacts[req.query.index] = contact; 
+    //contacts = [];
+    console.log('PUT contacts');
+});
+
+
 app.listen(port, () => {
     console.log('servidor corriendo...' + process.env.IP)
 });
