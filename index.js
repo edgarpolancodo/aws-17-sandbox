@@ -36,14 +36,20 @@ app.get(base+'/contacts', (req, res) => {
 
 app.get(base+'/contacts/:name', (req, res) => {
     
-    var fcontacts = contacts.filter((contact) => {
+    /*var fcontacts = contacts.filter((contact) => {
         
         return (contact.name == req.params.name)
     })[0];
     if(fcontacts)
         res.send(fcontacts);
     else
-        res.sendStatus(404);
+        res.sendStatus(404);*/
+    db.find({name : req.params.name},{},(err, contacts)=>{
+        if (contacts.length == 0)
+            res.sendStatus(404);
+        else
+            res.send(contacts[0]); 
+    });
     console.log('GET contact');
 });
 
@@ -90,14 +96,23 @@ app.put(base+'/contacts/:name', (req, res) => {
     c.name = contact.name;
     c.phone = contact.phone;*/
     
-    contacts = contacts.map((contac) => {
+    /*contacts = contacts.map((contac) => {
         if(contac.name == contact.name)
         {
             return  contact;
         }
         else{
             return contac;
-        }});
+        }});*/
+        
+    db.update({name:req.params.name},contact,{},(err,numUpdates)=>{
+        console.log("contacts updated:"+numUpdates);
+        if (numUpdates == 0)
+            res.sendStatus(404);    
+        else
+            res.sendStatus(200);    
+       
+    });
     
     res.sendStatus(200);
     //contacts[req.query.index] = contact; 
