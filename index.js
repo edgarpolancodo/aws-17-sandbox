@@ -68,9 +68,9 @@ app.put(base+'/contacts/:name', (req, res) => {
     var c = contacts.filter((contac) => {
         return (contac.name == req.params.name)
     })[0];
-    c.email = req.params.email;
-    c.name = req.params.name;
-    c.phone = req.params.phone;
+    c.email = contact.email;
+    c.name = contact.name;
+    c.phone = contact.phone;
     
     res.sendStatus(200);
     //contacts[req.query.index] = contact; 
