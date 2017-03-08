@@ -67,12 +67,21 @@ app.delete(base+'/contacts/:name', (req, res) => {
 app.put(base+'/contacts/:name', (req, res) => {
     var contact = req.body;
     
-    var c = contacts.filter((contac) => {
+    /*var c = contacts.filter((contac) => {
         return (contac.name == req.params.name)
     })[0];
     c.email = contact.email;
     c.name = contact.name;
-    c.phone = contact.phone;
+    c.phone = contact.phone;*/
+    
+    contacts = contacts.map((contac) => {
+        if(contac.name == contact.name)
+        {
+            return  contact;
+        }
+        else{
+            return contac;
+        }});
     
     res.sendStatus(200);
     //contacts[req.query.index] = contact; 
