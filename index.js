@@ -3,9 +3,16 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var port = (process.env.PORT || 3000);
 var app = express();
+var path = require('path');
+var dataStore = require('nedb');
+var dbFileName = path.join(__dirname, 'contacts.json')
 
+var db = new dataStore({
+   filename : dbFileName,
+   autoload : true
+});
 
-var contacts = [{
+/*var contacts = [{
     name: 'Edgar',
     phone: '809829849',
     email: 'edgar@edgar.com'
@@ -13,7 +20,7 @@ var contacts = [{
     name: 'Rosangel',
     phone: '849829809',
     email: 'rosangel@rosangel.com'
-}];
+}];*/
 
 app.use(bodyParser.json());
 
@@ -21,7 +28,9 @@ var base ='/api/v1'
 
 //console.log(cool());
 app.get(base+'/contacts', (req, res) => {
-    res.send(contacts);
+    db.find({},(err,contacts)=>{
+        res.send(contacts);
+    });
     console.log('GET contacts');
 });
 
@@ -40,7 +49,7 @@ app.get(base+'/contacts/:name', (req, res) => {
 
 app.post(base+'/contacts', (req, res) => {
     var contact = req.body;
-    contacts.push(contact);
+    db.insert(contact);
     res.sendStatus(201);
     console.log('POST contact');
 });
