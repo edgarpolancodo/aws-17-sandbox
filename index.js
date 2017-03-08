@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
 
 app.delete(base+'/contacts', (req, res) => {
     //contacts = [];
-    db.remove({},{},(err, numRemoved)=>{
+    db.remove({},{ multi: true},(err, numRemoved)=>{
         console.log('Filas removidas: '+numRemoved)
         res.sendStatus(200);
     });
