@@ -25,6 +25,17 @@ app.get(base+'/contacts', (req, res) => {
     console.log('GET contacts');
 });
 
+app.get(base+'/contacts/:name', (req, res) => {
+    
+    var fcontacts = contacts.filter((contact) => {
+        
+        return (contact.name == req.params.name)
+    })[0];
+    
+    res.send(fcontacts);
+    console.log('GET contacts');
+});
+
 app.post(base+'/contacts', (req, res) => {
     var contact = req.body;
     contacts.push(contact);
@@ -43,10 +54,15 @@ app.delete(base+'/contacts', (req, res) => {
     console.log('DELETE contacts');
 });
 
-app.put(base+'/contacts', (req, res) => {
+app.put(base+'/contacts/:name', (req, res) => {
     var contact = req.body;
+    
+    contacts.filter((contac) => {
+        return (contac.name == req.params.name)
+    })[0] = contact;
+    
     res.sendStatus(200);
-    contacts[req.query.index] = contact; 
+    //contacts[req.query.index] = contact; 
     //contacts = [];
     console.log('PUT contacts');
 });
