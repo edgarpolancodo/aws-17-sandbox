@@ -33,7 +33,7 @@ app.get(base+'/contacts/:name', (req, res) => {
     })[0];
     
     res.send(fcontacts);
-    console.log('GET contacts');
+    console.log('GET contact');
 });
 
 app.post(base+'/contacts', (req, res) => {
@@ -65,14 +65,17 @@ app.delete(base+'/contacts/:name', (req, res) => {
 app.put(base+'/contacts/:name', (req, res) => {
     var contact = req.body;
     
-    contacts.filter((contac) => {
+    var c = contacts.filter((contac) => {
         return (contac.name == req.params.name)
-    })[0] = contact;
+    })[0];
+    c.email = req.params.email;
+    c.name = req.params.name;
+    c.phone = req.params.phone;
     
     res.sendStatus(200);
     //contacts[req.query.index] = contact; 
     //contacts = [];
-    console.log('PUT contacts');
+    console.log('PUT contact');
 });
 
 
