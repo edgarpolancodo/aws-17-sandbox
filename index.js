@@ -1,18 +1,19 @@
+'use strict';
 var cool = require('cool-ascii-faces');
 var express = require('express');
 var bodyParser = require('body-parser');
 var port = (process.env.PORT || 3000);
 var app = express();
 var path = require('path');
-var dataStore = require('nedb');
-var dbFileName = path.join(__dirname, 'contacts.json')
+var DataStore = require('nedb');
+var dbFileName = path.join(__dirname, 'contacts.json');
 
-var db = new dataStore({
+var db = new DataStore({
    filename : dbFileName,
    autoload : true
 });
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
 /*var contacts = [{
     name: 'Edgar',
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.json());
 
-var base ='/api/v1'
+var base ='/api/v1';
 
 //console.log(cool());
 app.get(base+'/contacts', (req, res) => {
@@ -47,10 +48,12 @@ app.get(base+'/contacts/:name', (req, res) => {
     else
         res.sendStatus(404);*/
     db.find({name : req.params.name},{},(err, contacts)=>{
-        if (contacts.length == 0)
+        if (contacts.length === 0){
             res.sendStatus(404);
-        else
-            res.send(contacts[0]); 
+        }
+        else{
+            res.send(contacts[0]);
+        }
     });
     console.log('GET contact');
 });
@@ -70,7 +73,7 @@ app.get('/', (req, res) => {
 app.delete(base+'/contacts', (req, res) => {
     //contacts = [];
     db.remove({},{ multi: true},(err, numRemoved)=>{
-        console.log('Filas removidas: '+numRemoved)
+        console.log('Filas removidas: '+numRemoved);
         res.sendStatus(200);
     });
     console.log('DELETE contacts');
@@ -82,7 +85,7 @@ app.delete(base+'/contacts/:name', (req, res) => {
         return (contac.name != req.params.name)
     });*/
     db.remove({name : req.params.name},{},(err, numRemoved)=>{
-        console.log('Filas removidas: '+numRemoved)
+        console.log('Filas removidas: '+numRemoved);
         res.sendStatus(200);
     });
     console.log('DELETE contact');
@@ -109,10 +112,12 @@ app.put(base+'/contacts/:name', (req, res) => {
         
     db.update({name:req.params.name},contact,{},(err,numUpdates)=>{
         console.log("contacts updated:"+numUpdates);
-        if (numUpdates == 0)
-            res.sendStatus(404);    
-        else
-            res.sendStatus(200);    
+        if (numUpdates === 0){
+            res.sendStatus(404);
+        }
+        else{
+            res.sendStatus(200);  
+        }
        
     });
     
@@ -124,5 +129,5 @@ app.put(base+'/contacts/:name', (req, res) => {
 
 
 app.listen(port, () => {
-    console.log('servidor corriendo...' + process.env.IP)
+    console.log('servidor corriendo...' + process.env.IP);
 });
