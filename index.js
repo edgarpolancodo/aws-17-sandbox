@@ -12,6 +12,8 @@ var db = new dataStore({
    autoload : true
 });
 
+app.use(express.static(path.join(__dirname, 'public')))
+
 /*var contacts = [{
     name: 'Edgar',
     phone: '809829849',
