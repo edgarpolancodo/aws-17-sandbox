@@ -1,1 +1,1 @@
-angular.module("ContactListApp").controller("ListCtrl");
+angular.module("ContactListApp",[]);
