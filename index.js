@@ -1,133 +1,98 @@
 'use strict';
-var cool = require('cool-ascii-faces');
-var express = require('express');
-var bodyParser = require('body-parser');
-var port = (process.env.PORT || 3000);
-var app = express();
-var path = require('path');
-var DataStore = require('nedb');
-var dbFileName = path.join(__dirname, 'contacts.json');
 
-var db = new DataStore({
-   filename : dbFileName,
-   autoload : true
-});
+var express = require("express");
+var bodyParser = require("body-parser");
+var path = require('path');
+var contacts = require("./contacts.js");
+
+var port = (process.env.PORT || 16778);
+var baseAPI = "/api/v1";
+
+var app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-/*var contacts = [{
-    name: 'Edgar',
-    phone: '809829849',
-    email: 'edgar@edgar.com'
-}, {
-    name: 'Rosangel',
-    phone: '849829809',
-    email: 'rosangel@rosangel.com'
-}];*/
-
 app.use(bodyParser.json());
 
-var base ='/api/v1';
+contacts.add([{
+        name: "pepe",
+        phone: "12345",
+        email: "pepe@pepe.com"
+    }, {
+        name: "luis",
+        phone: "67890",
+        email: "luis@pepe.com"
+    }]);
 
-//console.log(cool());
-app.get(base+'/contacts', (req, res) => {
-    db.find({},(err,contacts)=>{
-        res.send(contacts);
-    });
-    console.log('GET contacts');
-});
-
-app.get(base+'/contacts/:name', (req, res) => {
+app.get(baseAPI + "/contacts", (request, response) => {
+    console.log("GET /contacts"); 
     
-    /*var fcontacts = contacts.filter((contact) => {
-        
-        return (contact.name == req.params.name)
-    })[0];
-    if(fcontacts)
-        res.send(fcontacts);
-    else
-        res.sendStatus(404);*/
-    db.find({name : req.params.name},{},(err, contacts)=>{
-        if (contacts.length === 0){
-            res.sendStatus(404);
+    contacts.allContacts((err,contacts)=>{
+        response.send(contacts);    
+    });
+});
+
+app.post(baseAPI + "/contacts", (request, response) => {
+    console.log("POST /contacts");
+    var contact = request.body;
+    contacts.add(contact);
+    response.sendStatus(201);
+});
+
+app.delete(baseAPI + "/contacts", (request, response) => {
+    console.log("DELETE /contacts");
+
+    contacts.removeAll((err,numRemoved)=>{
+        console.log("contacts removed:"+numRemoved);
+        response.sendStatus(200);    
+    });
+
+});
+
+app.get(baseAPI + "/contacts/:name", (request, response) => {
+    console.log("GET /contacts/"+name);
+    var name = request.params.name;
+
+    contacts.get(name,(err,contacts)=>{
+        if (contacts.length === 0) {
+            response.sendStatus(404);
         }
-        else{
-            res.send(contacts[0]);
+        else {
+            response.send(contacts[0]);  
         }
     });
-    console.log('GET contact');
 });
 
-app.post(base+'/contacts', (req, res) => {
-    var contact = req.body;
-    db.insert(contact);
-    res.sendStatus(201);
-    console.log('POST contact');
-});
 
-app.get('/', (req, res) => {
-    res.send('<html><body><h1>Hola cliente' + cool() + '</h1></body></html>');
-    console.log('New request');
-});
+app.delete(baseAPI + "/contacts/:name", (request, response) => {
+    var name = request.params.name;
 
-app.delete(base+'/contacts', (req, res) => {
-    //contacts = [];
-    db.remove({},{ multi: true},(err, numRemoved)=>{
-        console.log('Filas removidas: '+numRemoved);
-        res.sendStatus(200);
+    contacts.remove(name,(err,numRemoved)=>{
+        console.log("contacts removed:"+numRemoved);
+        response.sendStatus(200);    
     });
-    console.log('DELETE contacts');
+
+    console.log("DELETE /contacts/" + name);
 });
 
-app.delete(base+'/contacts/:name', (req, res) => {
-    /*res.sendStatus(200);
-    contacts = contacts.filter((contac) => {
-        return (contac.name != req.params.name)
-    });*/
-    db.remove({name : req.params.name},{},(err, numRemoved)=>{
-        console.log('Filas removidas: '+numRemoved);
-        res.sendStatus(200);
-    });
-    console.log('DELETE contact');
-});
 
-app.put(base+'/contacts/:name', (req, res) => {
-    var contact = req.body;
-    
-    /*var c = contacts.filter((contac) => {
-        return (contac.name == req.params.name)
-    })[0];
-    c.email = contact.email;
-    c.name = contact.name;
-    c.phone = contact.phone;*/
-    
-    /*contacts = contacts.map((contac) => {
-        if(contac.name == contact.name)
-        {
-            return  contact;
-        }
-        else{
-            return contac;
-        }});*/
-        
-    db.update({name:req.params.name},contact,{},(err,numUpdates)=>{
+app.put(baseAPI + "/contacts/:name", (request, response) => {
+    var name = request.params.name;
+    var updatedContact = request.body;
+
+    contacts.update(name, updatedContact ,(err,numUpdates) => {
         console.log("contacts updated:"+numUpdates);
-        if (numUpdates === 0){
-            res.sendStatus(404);
+        if (numUpdates === 0) {
+            response.sendStatus(404);    
+        } else {
+            response.sendStatus(200);    
         }
-        else{
-            res.sendStatus(200);  
-        }
-       
+        
     });
-    
-    res.sendStatus(200);
-    //contacts[req.query.index] = contact; 
-    //contacts = [];
-    console.log('PUT contact');
+
+    console.log("UPDATE /contacts/"+name);
 });
 
 
 app.listen(port, () => {
-    console.log('servidor corriendo...' + process.env.IP);
+    console.log("Server with GUI up and running!!");
 });
