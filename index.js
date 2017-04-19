@@ -8,7 +8,7 @@ var contacts = require("./contacts.js");
 var port = (process.env.PORT || 16778);
 var baseAPI = "/api/v1";
 
-var app = express();
+var app = express(); 
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
